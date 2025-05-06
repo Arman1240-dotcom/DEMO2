@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizzly - GK Quiz Website</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- AOS (Animate on Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="togglebtn.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+      :root {
+      --background-light: #f0f2f5;
+      --background-dark: #121212;
+      --text-light: #000000;
+      --text-dark: #ffffff;
+      --category-card-light: #ffffff;
+      --category-card-dark: #2c2c2c;
+      --btn-light: #007bff;
+      --btn-dark: #ff9800;
+      --grad-light:#00c6ff ;
+      --grad-dark:#ff8800;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-light);
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Dark theme styles */
+    body.dark-mode {
+      background-color: var(--background-dark);
+      color: white;
+    }
+    .container h2 {
+      color: var(--text-light);
+    
+    }
+    body.dark-mode .container h2 {
+      color: var(--text-light);
+    }
+
+    #logo {
+      height: 30px;
+      width: auto;
+    }
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1614723123226-6db3a0cb0e2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      color: rgb(255, 255, 255);
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      z-index: 0;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      font-weight: 300;
+      max-width: 600px;
+      margin: 20px auto;
+      line-height: 1.6;
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      transition: all 0.3s ease-in-out;
+      font-size: 1.2rem;
+      padding: 12px 25px;
+      border-radius: 30px;
+    }
+
+    .btn-gradient:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0.5rem 1rem rgba(0, 114, 255, 0.5);
+    }
+
+    /* Category Card styles */
+    .category-card {
+      border: none;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      background-color: var(--background-light);
+      box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      text-align: center;
+      min-height: 250px;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+    }
+
+    .category-card .card-icon {
+      font-size: 3.5rem;
+      color: var(--grad-light);
+      margin-bottom: 1.5rem;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .category-card:hover .card-icon {
+      transform: scale(1.1);
+      color: var(--grad-light);
+    }
+
+    .category-card h5 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .category-card p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #6c757d;
+    }
+
+    .category-card a {
+      padding: 10px 25px;
+      border-radius: 25px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .category-card a:hover {
+      background-color: var(--btn-light);
+      color: white;
+    }
+
+    body.dark-mode .category-card {
+      background-color: var(--background-dark);
+      color: white;
+    }
+
+    body.dark-mode .category-card .card-icon {
+      color: var(--grad-dark);
+    }
+
+    body.dark-mode .category-card .card-icon:hover {
+      color: var(--grad-dark);
+    }
+
+    body.dark-mode .category-card h5,
+    body.dark-mode .category-card p {
+      color: white;
+    }
+
+    body.dark-mode .category-card a {
+      border: 2px solid #ff9800;
+      color: #ff9800;
+    }
+
+    body.dark-mode .category-card a:hover {
+      background-color:var(--grad-dark);
+      color: white;
+    }
+
+    footer {
+      background-color: #1c1c1c;
+      padding: 40px 0;
+    }
+
+    footer a {
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    footer a:hover {
+      color: #00c6ff;
+      transform: scale(1.1);
+    }
+
+    footer i {
+      font-size: 1.5rem;
+    }
+
+    footer.dark-mode {
+      background-color: #333;
+    }
+    .new {
+      background-color: var(--background-light);
+      
+    }
+    body.dark-mode .new{
+      background-color: var(--category-card-dark);
+    
+    }
+    .container h2 {
+      color: var(--text-light);
+    }
+    body.dark-mode .container h2 {
+      color: var(--text-dark);
+    }
+    
+    
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle Button -->
+  <label class="toggle-switch">
+    <input type="checkbox" id="darkModeToggle">
+    <span class="slider"></span>
+  </label>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Quizzly</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="quizzes.html">Quizzes</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html">Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <!-- (rest of your code remains unchanged and continues here) -->
+
+
+  <!-- Hero Section -->
+  <section class="hero text-center">
+    <div class="container" data-aos="fade-up">
+      <h1>Welcome to Quizzly!</h1>
+      <p class="lead mt-3 mb-4">Test your knowledge across a wide range of topics and become a trivia master.</p>
+      <a href="quiz-random.html" class="btn btn-gradient btn-lg px-5 py-2">Start Quiz</a>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="py-5  new">
+    <div class="container new">
+      <h2 class="text-center mb-5 fw-bold" data-aos="fade-down">Quiz Categories</h2>
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="category-card">
+            <i class="fas fa-landmark card-icon"></i>
+            <h5 class="card-title">History</h5>
+            <p class="card-text">Explore important historical events and personalities.</p>
+            <a href="quiz-history.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="category-card">
+            <i class="fas fa-flask card-icon"></i>
+            <h5 class="card-title">Science</h5>
+            <p class="card-text">Challenge yourself with fascinating science facts.</p>
+            <a href="quiz-science.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="category-card">
+            <i class="fas fa-globe-americas card-icon"></i>
+            <h5 class="card-title">Geography</h5>
+            <p class="card-text">Test your knowledge of countries, cities, and landscapes.</p>
+            <a href="quiz-geography.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="category-card">
+            <i class="fas fa-basketball-ball card-icon"></i>
+            <h5 class="card-title">Sports</h5>
+            <p class="card-text">Score big by answering sports trivia across all disciplines.</p>
+            <a href="quiz-sports.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+          <div class="category-card">
+            <i class="fas fa-music card-icon"></i>
+            <h5 class="card-title">Music</h5>
+            <p class="card-text">From classical to pop, test your musical IQ!</p>
+            <a href="quiz-music.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+          <div class="category-card">
+            <i class="fas fa-microchip card-icon"></i>
+            <h5 class="card-title">Technology</h5>
+            <p class="card-text">Stay current on tech, gadgets, and innovation trends.</p>
+            <a href="quiz-tech.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="700">
+          <div class="category-card">
+            <i class="fas fa-film card-icon"></i>
+            <h5 class="card-title">Movies</h5>
+            <p class="card-text">Lights, camera, trivia! Test your film knowledge.</p>
+            <a href="quiz-movies.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="800">
+          <div class="category-card">
+            <i class="fas fa-book-open card-icon"></i>
+            <h5 class="card-title">Literature</h5>
+            <p class="card-text">Dive into the world of classic and modern literature.</p>
+            <a href="quiz-literature.html" class="btn btn-outline-primary">Take Quiz</a>
+          </div>
+      </div>
+      <div class="col-md-4 mx-auto" data-aos="fade-up" data-aos-delay="900">
+        <div class="category-card">
+          <i class="fas fa-compass card-icon"></i>
+          <h5 class="card-title">Explore More</h5>
+          <p class="card-text">Can’t decide? Discover more fun quizzes across various topics!</p>
+          <a href="quizzes.html" class="btn btn-outline-primary">Explore</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-white text-center py-4">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Quizzly. All rights reserved.</p>
+      <small>
+        Follow us on
+        <a href="#"><i class="fab fa-twitter mx-2"></i></a>
+        <a href="#"><i class="fab fa-facebook-f mx-2"></i></a>
+        <a href="#"><i class="fab fa-instagram mx-2"></i></a>
+      </small>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    // Get the dark mode toggle checkbox element
+    const toggle = document.getElementById("darkModeToggle");
+
+    // Load saved preference on page load
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      toggle.checked = true;
+    }
+
+    // Event listener for when the toggle is changed
+    toggle.addEventListener("change", () => {
+      if (toggle.checked) {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("darkMode", "disabled");
+      }
+    });
+  </script>
+
+</body>
+</html>

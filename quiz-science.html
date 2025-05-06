@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizzly - Science Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="togglebtn.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="quizelout.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Quizzly</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="quizzes.html">Quizzes</a></li>
+          <li class="nav-item"><a class="nav-link" href="leaderboard.html">Leaderboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <a id="back-btn" href="quizzes.html" title="Go Back">&#8592;</a>
+  <div id="partyPopperContainer" class="text-center" style="display:none;">
+    <i class="fas fa-party-popper fa-3x"></i>
+    <i class="fas fa-party-popper fa-3x"></i>
+    <i class="fas fa-party-popper fa-3x"></i>
+  </div>
+  <div id="startScreen" class="quiz-container fade-in">
+    <h1>🔬Science</h1>
+    <p>Test your knowledge of Science</p>
+    <label for="questionCount" class="form-label">Select number of questions:</label>
+    <select class="form-select mb-3" id="questionCount">
+      <option value="5">5 Questions</option>
+      <option value="10" selected>10 Questions</option>
+      <option value="20">20 Questions</option>
+    </select>
+    <button class="btn btn-primary" onclick="startQuiz(parseInt(document.getElementById('questionCount').value))">Start Quiz</button>
+  </div>
+
+  <div id="quizScreen" class="quiz-container fade-in" style="display:none;">
+    <div id="questionNumber" class="mb-2"></div>
+    <div id="questionText" class="mb-3"></div>
+    <div id="options" onclick="nextQuestion()"></div>
+    <div class="mt-3">
+      <button id="nextBtn" class="btn btn-success" onclick="nextQuestion()">Next</button>
+      <button id="submitBtn" class="btn btn-danger" onclick="showResult()" style="display:none;">Submit</button>
+    </div>
+    <div class="mt-4">
+      <div class="progress">
+        <div id="progressBar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div id="timer" class="mt-2"></div>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="result-screen fade-in" style="display:none;">
+    <h2>Quiz Complete!</h2>
+    <p>Your Score: <strong id="finalScore"></strong></p>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Try Again</button>
+  </div>
+  <label class="toggle-switch">
+    <input type="checkbox" id="darkModeToggle">
+    <span class="slider"></span>
+  </label>
+  
+
+
+  <script>
+    // Get the dark mode toggle checkbox element
+    const toggle = document.getElementById("darkModeToggle");
+
+    // Load saved preference on page load
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      toggle.checked = true;
+    }
+
+    // Event listener for when the toggle is changed
+    toggle.addEventListener("change", () => {
+      if (toggle.checked) {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("darkMode", "enabled");
+      } else {
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("darkMode", "disabled");
+      }
+    });
+  </script>
+
+  <script>
+    const allQuestions = [
+      { question: "What is the chemical symbol for Gold?", options: ["Au", "Ag", "Gd", "Go"], answer: "Au" },
+    { question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], answer: "Mars" },
+    { question: "What part of the cell contains the genetic material?", options: ["Cytoplasm", "Nucleus", "Mitochondria", "Ribosome"], answer: "Nucleus" },
+    { question: "Which gas is most abundant in Earth’s atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], answer: "Nitrogen" },
+    { question: "What is H2O commonly known as?", options: ["Hydrogen Peroxide", "Hydroxide", "Water", "Oxygen"], answer: "Water" },
+    { question: "Which of the following is not a mammal?", options: ["Whale", "Bat", "Penguin", "Elephant"], answer: "Penguin" },
+    { question: "What is the unit of electric current?", options: ["Volt", "Ampere", "Watt", "Ohm"], answer: "Ampere" },
+    { question: "What type of energy does a moving object have?", options: ["Potential Energy", "Thermal Energy", "Kinetic Energy", "Chemical Energy"], answer: "Kinetic Energy" },
+    { question: "What causes seasons on Earth?", options: ["Distance from the Sun", "Earth’s tilt on its axis", "Moon's orbit", "Sun's rotation"], answer: "Earth’s tilt on its axis" },
+    { question: "Which vitamin is produced when human skin is exposed to sunlight?", options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"], answer: "Vitamin D" },
+    { question: "What is the boiling point of water at sea level?", options: ["90°C", "100°C", "120°C", "80°C"], answer: "100°C" },
+    { question: "Which organ pumps blood throughout the body?", options: ["Brain", "Kidney", "Heart", "Liver"], answer: "Heart" },
+    { question: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Nitrogen", "Hydrogen", "Carbon Dioxide"], answer: "Carbon Dioxide" },
+    { question: "Which element is needed for hemoglobin?", options: ["Calcium", "Iron", "Zinc", "Magnesium"], answer: "Iron" },
+    { question: "What keeps planets in orbit around the Sun?", options: ["Magnetism", "Gravity", "Electricity", "Friction"], answer: "Gravity" },
+    { question: "What bond is formed by sharing electrons?", options: ["Ionic", "Metallic", "Covalent", "Hydrogen"], answer: "Covalent" },
+    { question: "Which part of a plant conducts photosynthesis?", options: ["Root", "Stem", "Flower", "Leaf"], answer: "Leaf" },
+    { question: "What is the main gas in the Sun?", options: ["Oxygen", "Hydrogen", "Nitrogen", "Helium"], answer: "Hydrogen" },
+    { question: "How many bones are in an adult body?", options: ["206", "201", "198", "210"], answer: "206" },
+    { question: "Newton’s Third Law of Motion?", options: ["F = ma", "An object in motion stays in motion", "For every action, there is an equal and opposite reaction", "Force is mass times acceleration"], answer: "For every action, there is an equal and opposite reaction" }
+    ];
+
+    let selectedQuestions = [];
+    let currentQuestion = 0;
+    let score = 0;
+    let timerInterval;
+
+    function startQuiz(numQuestions) {
+      selectedQuestions = shuffleArray([...allQuestions]).slice(0, numQuestions);
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("quizScreen").style.display = "block";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      clearInterval(timerInterval);
+      const q = selectedQuestions[currentQuestion];
+      document.getElementById("questionText").innerHTML = `<div id="timer" class="text-danger">Time Left: 10s</div><div class="mt-2">${q.question}</div>`;
+      document.getElementById("questionNumber").innerText = `Question ${currentQuestion + 1} of ${selectedQuestions.length}`;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-outline-primary option-btn";
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById("nextBtn").style.display = currentQuestion < selectedQuestions.length - 1 ? "inline-block" : "none";
+      document.getElementById("submitBtn").style.display = currentQuestion === selectedQuestions.length - 1 ? "inline-block" : "none";
+      startTimer();
+      updateProgress();
+    }
+
+    function checkAnswer(selected) {
+      const correctAnswer = selectedQuestions[currentQuestion].answer;
+      if (selected === correctAnswer) {
+        score++;
+      }
+      disableOptions();
+    }
+
+    function disableOptions() {
+      document.querySelectorAll(".option-btn").forEach(button => {
+        button.disabled = true;
+      });
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < selectedQuestions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quizScreen").style.display = "none";
+      document.getElementById("resultScreen").style.display = "block";
+      document.getElementById("finalScore").innerText = `${score} / ${selectedQuestions.length}`;
+      const percentage = (score / selectedQuestions.length) * 100;
+        if (percentage > 60) {
+        confetti({
+          particleCount: 200,
+          spread: 90,
+          origin: { y: 0.6 }
+        });
+        }
+    
+    }
+
+    function restartQuiz() {
+      document.getElementById("resultScreen").style.display = "none";
+      document.getElementById("startScreen").style.display = "block";
+    }
+
+    function startTimer() {
+      let timeLeft = 10;
+      document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+        if (timeLeft === 0) {
+          clearInterval(timerInterval);
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function updateProgress() {
+      let progress = ((currentQuestion + 1) / selectedQuestions.length) * 100;
+      const progressBar = document.getElementById("progressBar");
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute("aria-valuenow", progress);
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
